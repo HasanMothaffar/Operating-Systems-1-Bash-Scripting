@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 GLOBAL_DATABASE_FILENAME=""
 SCRIPT_PROMPT="
