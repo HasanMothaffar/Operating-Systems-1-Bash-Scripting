@@ -40,4 +40,5 @@ enable_automatic_backups(){
     if [[ "$KEY" == "monthly" ]]; then
         0 0 1 * * /home/os1/q2.sh /home/os1/first.os1db --backup --outputdir /opt/backups --max $KEY2
     fi
+    echo "done"
 }
