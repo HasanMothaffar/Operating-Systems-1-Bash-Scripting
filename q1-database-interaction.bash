@@ -17,13 +17,13 @@ function encode_key() {
 
 function insert_key_value_record_to_file() {
     read -r -p "Enter key: " KEY
-    read -r -p "Enter value: " VALUE
   
     # Only add new record if key doesn't exist before
-    SEARCH_RESULT=$(grep -i -w  "$KEY" "$GLOBAL_DATABASE_FILENAME")
+    SEARCH_RESULT=$(grep -w  "$KEY" "$GLOBAL_DATABASE_FILENAME")
     if [ -z "$SEARCH_RESULT" ] 
         then 
-        
+
+        read -r -p "Enter value: " VALUE
         ENCODED_VALUE=$(encode_key "$VALUE")
         echo "$KEY: $ENCODED_VALUE" >> "$GLOBAL_DATABASE_FILENAME"
         echo "Added key $KEY succesfully!"
@@ -60,6 +60,22 @@ function search_for_record_by_key() {
     fi
 }
 
+function update_record() {
+    read -r -p "Enter the key for the record you want to edit : " KEY
+
+    KEY_LINE_NUMBER=$(grep -n -w "$KEY" "$GLOBAL_DATABASE_FILENAME" | cut -d : -f 1)
+        if [ -z "$KEY_LINE_NUMBER" ] 
+            then 
+            echo "Key $KEY does not exist in the database"
+        else
+            # Replace line containing key
+            read -r -p "Enter the new value: " VALUE
+            NEW_ENCODED_VALUE=$(encode_key "$VALUE")
+            sed -i "${KEY_LINE_NUMBER}s/.*/${KEY}: ${NEW_ENCODED_VALUE}/" "$GLOBAL_DATABASE_FILENAME"
+            echo "Key $KEY modified successfully!"
+        fi
+}
+
 function main_loop() {
     OPTION=""
 
@@ -92,5 +108,4 @@ function main_loop() {
     done
 }
 
-echo Main "$GLOBAL_DATABASE_FILENAME"
 main_loop
