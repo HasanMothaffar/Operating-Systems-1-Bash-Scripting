@@ -1,0 +1,62 @@
+# Reference: https://phoenixnap.com/kb/install-ftp-server-on-ubuntu-vsftpd
+function set_up_ftp_server() {
+    sudo apt update
+    sudo apt install vsftpd
+
+    # Start up the service and enable auto-startup
+    sudo systemctl start vsftpd
+    sudo systemctl enable vsftpd
+
+    # Or use this if you're on WSl, because systemctl is not supported
+    # sudo service vsftpd start
+
+    # Configure firewall
+    sudo ufw allow 20/tcp
+    sudo ufw allow 21/tcp
+
+    VSFTPD_CONFIG="
+    listen=NO
+    listen_ipv6=YES
+    anonymous_enable=NO
+    local_enable=YES
+    write_enable=YES
+    local_umask=022
+    dirmessage_enable=YES
+    use_localtime=YES
+    xferlog_enable=YES
+    connect_from_port_20=YES
+    chroot_local_user=YES
+    secure_chroot_dir=/var/run/vsftpd/empty
+    pam_service_name=vsftpd
+    rsa_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+    rsa_private_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+    ssl_enable=NO
+    pasv_enable=Yes
+    pasv_min_port=10000
+    pasv_max_port=10100
+    allow_writeable_chroot=YES"
+
+    echo "$VSFTPD_CONFIG" > /etc/vsftpd.conf
+
+    # Note that this is not secure FTP. Securing connections requires
+    # additional configuration
+}
+
+# Reference: https://superuser.com/questions/532130/how-to-download-files-from-ftp-site-in-one-command-line-without-user-interaction
+function download_file() {
+    read -r -p "Enter your FTP username: " USERNAME
+    read -r -p -s "Enter your FTP password: " PASSWORD
+    read -r -p "Enter the filename you want to download: " FILENAME
+
+    wget "ftp://$USERNAME:$PASSWORD@localhost$FILENAME"
+
+    # Example: wget ftp://user:password@ftp.mydomain.com/path/file.ext
+}
+
+function upload_file() {
+    ftp -n <<EOF
+open localhost
+it_bot_1 123
+put my-local-file.txt
+EOF
+}
