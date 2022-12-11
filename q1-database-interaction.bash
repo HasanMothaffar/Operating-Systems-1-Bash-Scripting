@@ -19,21 +19,36 @@ function insert_key_value_record_to_file() {
     read -r -p "Enter key: " KEY
     read -r -p "Enter value: " VALUE
   
-    # if key already exists return
-
-    ENCODED_VALUE=$(encode_key "$VALUE")
-    echo "$KEY: $ENCODED_VALUE" >> "$GLOBAL_DATABASE_FILENAME"
-    echo "Added key $KEY succesfully!"
+    # Only add new record if key doesn't exist before
+    SEARCH_RESULT=$(grep -i -w  "$KEY" "$GLOBAL_DATABASE_FILENAME")
+    if [ -z "$SEARCH_RESULT" ] 
+        then 
+        
+        ENCODED_VALUE=$(encode_key "$VALUE")
+        echo "$KEY: $ENCODED_VALUE" >> "$GLOBAL_DATABASE_FILENAME"
+        echo "Added key $KEY succesfully!"
+    else
+        echo "Key $KEY already exists in the database"
+    fi
 }
 
 function delete_record_by_key() {
-  read -r -p "Enter the key that you want to delete its record: " KEY
-  # if key doesn't exist return BRO I NEED VALID KEYS
-  # else delete record peacefully
+    read -r -p "Enter the key that you want to delete its record: " KEY
+
+    KEY_LINE_NUMBER=$(grep -n -w "$KEY" "$GLOBAL_DATABASE_FILENAME" | cut -d : -f 1)
+        if [ -z "$KEY_LINE_NUMBER" ] 
+            then 
+            echo "Key $KEY does not exist in the database"
+        else
+            # Delete line containing key
+            sed -i "${KEY_LINE_NUMBER}d" "$GLOBAL_DATABASE_FILENAME"
+            echo "Key $KEY deleted successfully!"
+        fi
+
 }
 
 function search_for_record_by_key() {
-    read -r -p "Enter the key that you want to serach for: " KEY
+    read -r -p "Enter the key that you want to search for: " KEY
 
     # Search for words matching KEY, ignore casing
     SEARCH_RESULT=$(grep -i -w  "$KEY" "$GLOBAL_DATABASE_FILENAME")
