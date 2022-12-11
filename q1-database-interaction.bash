@@ -1,6 +1,14 @@
 #!/bin/bash
 
-source core.bash
+QUESTION_PROMPT="
+Q1 ($GLOBAL_DATABASE_FILENAME):
+1) Add a new record
+2) Delete a record
+3) Search for a record
+4) Update a record
+5) Back to main program
+
+Please enter a number from the list above: "
 
 function encode_key() {
     key=$1
@@ -15,6 +23,7 @@ function insert_key_value_record_to_file() {
 
     ENCODED_VALUE=$(encode_key "$VALUE")
     echo "$KEY: $ENCODED_VALUE" >> "$GLOBAL_DATABASE_FILENAME"
+    echo "Added key $KEY succesfully!"
 }
 
 function delete_record_by_key() {
@@ -24,8 +33,16 @@ function delete_record_by_key() {
 }
 
 function search_for_record_by_key() {
-  read -r -p "Enter the key that you want to serach for: " KEY
-  # return grep magic
+    read -r -p "Enter the key that you want to serach for: " KEY
+
+    # Search for words matching KEY, ignore casing
+    SEARCH_RESULT=$(grep -i -w  "$KEY" "$GLOBAL_DATABASE_FILENAME")
+    if [ -z "$SEARCH_RESULT" ] 
+        then 
+        echo "No result was found for $KEY"
+    else
+        echo "$SEARCH_RESULT"
+    fi
 }
 
 function main_loop() {
@@ -33,7 +50,7 @@ function main_loop() {
 
     while [ "$OPTION" != "5" ]
     do
-        read -r -p "$SCRIPT_PROMPT" OPTION
+        read -r -p "$QUESTION_PROMPT" OPTION
         clear
         
         case $OPTION in
@@ -50,28 +67,15 @@ function main_loop() {
             update_record
             ;;
             5)
-            echo "😢 Exiting program."
+            echo "Back to main program."
             exit 0
             ;;
             *)
-            echo "🤔 Uknown key."
+            echo "🤔 Unknown key."
             ;;
         esac
-
-   
     done
 }
 
-initialize_database "$1" "$2"
-
-SCRIPT_PROMPT="
-Q1 ($GLOBAL_DATABASE_FILENAME):
-1) Add a new record
-2) Delete a record
-3) Search for a record
-4) Update a record
-5) Exit
-
-Please enter a number from the list above: "
-
+echo Main "$GLOBAL_DATABASE_FILENAME"
 main_loop
