@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source db.bash
+source init.bash
 
 PROJECT_PROMPT="
 Select the question that you want to execute:
