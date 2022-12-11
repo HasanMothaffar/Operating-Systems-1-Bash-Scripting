@@ -1,3 +1,5 @@
+#!/bin/bash
+
 source core.bash
 
 function encode_key() {
