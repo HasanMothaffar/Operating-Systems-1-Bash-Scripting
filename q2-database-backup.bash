@@ -26,7 +26,7 @@ function backup_database() {
             echo "Backup done (/home/os1/$KEY)"
         elif [[ "$KEY" =~ .*\.tar.gz ]]; then
             echo "Using gz for backup (file has .gz extension)..."
-            tar -czvf "/home/os1/$KEY" $GLOBAL_DATABASE_FILENAME
+            tar -czf "/home/os1/$KEY" $GLOBAL_DATABASE_FILENAME
             echo "Backup done (/home/os1/$KEY)"
         fi
     fi
@@ -37,7 +37,7 @@ function restore_database() {
     if [[ "$KEY" =~ .*\.zip ]]; then
         unzip $KEY
     elif [[ "$KEY" =~ .*\.tar\.gz ]]; then
-        tar -zxvf $KEY
+        tar -zxf $KEY
     fi
 }
 
