@@ -8,7 +8,7 @@ function search_for_dirs_or_files() {
     DIRECTORY_TO_START_SEARCHING_FORM="${args[0]}"
     FIND_EXPRESSION="find $DIRECTORY_TO_START_SEARCHING_FORM "
 
-    # I hate bash: https://stackoverflow.com/questions/68881897/bash-get-last-index-of-array
+    # https://stackoverflow.com/questions/68881897/bash-get-last-index-of-array
     LAST_INDEX=$((${#ALL_ARGS_EXCEPT_FOR_FIRST_ONE[@]} - 1))
 
     for i in "${!ALL_ARGS_EXCEPT_FOR_FIRST_ONE[@]}"; do
