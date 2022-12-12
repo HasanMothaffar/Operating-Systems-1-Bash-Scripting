@@ -1,14 +1,20 @@
 #!/bin/bash
 
-QUESTION_PROMPT="
-Q1 ($GLOBAL_DATABASE_FILENAME):
-1) Add a new record
-2) Delete a record
-3) Search for a record
-4) Update a record
-5) Back to main program
+USAGE="
+Usage: ./q1-database-interaction.bash [--create] <dbname>
 
-Please enter a number from the list above: "
+Examples:
+- ./q1-database-interaction.bash --create os1.db (Creates os1.db if it doesn't exist or uses it)
+- ./q1-database-interaction.bash  os1.db (Uses the existing db os1.db)
+"
+
+if [ $# = 0 ] 
+    then
+    echo "$USAGE"
+    exit
+fi
+
+source db_init.bash
 
 function encode_key() {
     key=$1
@@ -98,7 +104,7 @@ function main_loop() {
             update_record
             ;;
             5)
-            echo "Back to main program."
+            echo "Exit"
             exit 0
             ;;
             *)
@@ -107,5 +113,17 @@ function main_loop() {
         esac
     done
 }
+
+initialize_database "$1" "$2"
+
+QUESTION_PROMPT="
+Q1 ($GLOBAL_DATABASE_FILENAME):
+1) Add a new record
+2) Delete a record
+3) Search for a record
+4) Update a record
+5) Back to main program
+
+Please enter a number from the list above: "
 
 main_loop
