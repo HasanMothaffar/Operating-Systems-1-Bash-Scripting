@@ -2,7 +2,7 @@
 function search_for_dirs_or_files_without_multithreading() {
     # Usage: ./my_script place-to-search-from arg1 arg2 arg3
     # E.g. ./my_script / opt users_management.js another-file
-    
+
     args=("$@")
     ALL_ARGS_EXCEPT_FOR_FIRST_ONE=("${args[@]:1}")
 
@@ -36,4 +36,4 @@ function search_for_dirs_or_files_without_multithreading() {
     # cacheme find -name "opt" -printf "Permissions="%M\\t"User="%u" Group="%g\\t"Path="%p\\n 2>/dev/null
 }
 
-search_for_dirs_or_files_pseudocode "$@"
+search_for_dirs_or_files_without_multithreading "$@"
