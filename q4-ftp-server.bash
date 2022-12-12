@@ -1,3 +1,20 @@
+VALID_OPTIONS="--download | --upload | --init"
+
+USAGE="
+Usage: ./q4-ftp-server.bash $VALID_OPTIONS
+
+Help:
+--download: Downloads a file from the local FTP server
+--upload: Uploads a file to the local FTP server
+--init: Initializes a local FTP server with default configs
+"
+
+if [ $# = 0 ] 
+    then
+    echo "$USAGE"
+    exit
+fi
+
 # Reference: https://phoenixnap.com/kb/install-ftp-server-on-ubuntu-vsftpd
 function set_up_ftp_server() {
     sudo apt update
@@ -42,21 +59,53 @@ function set_up_ftp_server() {
     # additional configuration
 }
 
-# Reference: https://superuser.com/questions/532130/how-to-download-files-from-ftp-site-in-one-command-line-without-user-interaction
+# FTP Man: https://lftp.yar.ru/lftp-man.html
 function download_file() {
     read -r -p "Enter your FTP username: " USERNAME
-    read -r -p -s "Enter your FTP password: " PASSWORD
-    read -r -p "Enter the filename you want to download: " FILENAME
+    read -s -r -p "Enter your FTP password: " PASSWORD
+    echo
+    read -r -p "Enter the remote filename you want to download: " REMOTE_FILENAME
+    read -r -p "Enter the local filepath you want to download to: " LOCAL_FILEPATH
 
-    wget "ftp://$USERNAME:$PASSWORD@localhost$FILENAME"
-
-    # Example: wget ftp://user:password@ftp.mydomain.com/path/file.ext
+    lftp -e "mirror -O $LOCAL_FILEPATH -f $REMOTE_FILENAME" -u "$USERNAME","$PASSWORD" localhost
 }
 
+# FTP Man: https://lftp.yar.ru/lftp-man.html
 function upload_file() {
-    ftp -n <<EOF
-open localhost
-it_bot_1 123
-put my-local-file.txt
-EOF
+    read -r -p "Enter your FTP username: " USERNAME
+    read -s -r -p "Enter your FTP password: " PASSWORD
+    echo
+
+    read -r -p "Enter the local filename you want to upload: " LOCAL_FILENAME
+    read -r -p "Enter the target directory: " TARGET_DIRECTORY
+
+    FILE_OR_DIRECTORY_FLAG=""
+
+
+    if [ -d "$LOCAL_FILENAME" ]; then FILE_OR_DIRECTORY_FLAG="F"
+    elif [ -f "$LOCAL_FILENAME" ]; then FILE_OR_DIRECTORY_FLAG="f"
+    fi
+
+    # Reference: https://serverfault.com/questions/220988/how-to-upload-a-directory-recursively-to-an-ftp-server-by-just-using-ftp-or-lftp
+    lftp -e "mirror -R -$FILE_OR_DIRECTORY_FLAG $LOCAL_FILENAME --target-directory=$TARGET_DIRECTORY" -u "$USERNAME","$PASSWORD" localhost
 }
+
+function main() {
+     case $1 in
+        --download)
+        download_file
+        ;;
+        --upload)
+        upload_file
+        ;;
+        --init)
+        set_up_ftp_server
+        ;;
+        *)
+        echo "🤔 Unknown key."
+        echo "Valid options are $VALID_OPTIONS"
+        ;;
+    esac
+}
+
+main "$1"
