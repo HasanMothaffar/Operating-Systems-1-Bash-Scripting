@@ -1,7 +1,19 @@
-function search_for_dirs_or_files() {
-    # Usage: ./my_script place-to-search-from arg1 arg2 arg3
-    # E.g. ./my_script / opt users_management.js another-file
+USAGE="
+Usage: ./my_script <place-to-search-from> [arg1 arg2 arg3 ...]
 
+Examples:
+- ./my_script / opt users_management.js b.txt
+
+Searches for all files called users_mangement.js or b.txt 
+starting from root (/) and displays the results."
+
+if [ $# = 0 ] 
+    then
+    echo "$USAGE"
+    exit
+fi
+
+function search_for_dirs_or_files() {
     args=("$@")
     ALL_ARGS_EXCEPT_FOR_FIRST_ONE=("${args[@]:1}")
 
