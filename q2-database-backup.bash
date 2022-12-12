@@ -1,9 +1,11 @@
 #!/bin/bash
 
+#executing this will automatically activate SCRIPT_PROMPT cli and then it's pretty straight forward just as the homework says
+
 GLOBAL_DATABASE_FILENAME="first.os1db" #temporary
-MODE=0
-OUTPUTDIR=""
-MAX=0
+MODE=0                                 #--backup will set to 1 --restore will set 2
+OUTPUTDIR=""                           #--outputdir to set auto backup output path
+MAX=0                                  #--max to set max files to auto backup
 SCRIPT_PROMPT="
 Q2 backup / restore ($GLOBAL_DATABASE_FILENAME):
 1) Backup the database
