@@ -1,5 +1,4 @@
-
-function search_for_dirs_or_files_without_multithreading() {
+function search_for_dirs_or_files() {
     # Usage: ./my_script place-to-search-from arg1 arg2 arg3
     # E.g. ./my_script / opt users_management.js another-file
 
@@ -20,20 +19,24 @@ function search_for_dirs_or_files_without_multithreading() {
         fi
     done
 
-    SPECIAL_PRINT_FORMAT=" -printf %M\" \"%m\" User: \"%u/\" Group:\"%g/\" Name:\"%p\\\n"
+    # https://unix.stackexchange.com/questions/353460/list-permissions-with-find-command
+    SPACE="\\\t"
+    SPECIAL_PRINT_FORMAT=" -printf %M$SPACE%m$SPACE%u$SPACE%g$SPACE%p\\\n"
     REDIRECT_ERROR_TO_NULL=" 2>/dev/null"
     
     FIND_EXPRESSION+="$SPECIAL_PRINT_FORMAT"
     FIND_EXPRESSION+="$REDIRECT_ERROR_TO_NULL"
 
     echo "Searching from: $DIRECTORY_TO_START_SEARCHING_FORM"
-    echo "Final expression: $FIND_EXPRESSION"
-    echo ""
-    eval "$FIND_EXPRESSION"
-
-    
-    # # https://unix.stackexchange.com/questions/353460/list-permissions-with-find-command
-    # cacheme find -name "opt" -printf "Permissions="%M\\t"User="%u" Group="%g\\t"Path="%p\\n 2>/dev/null
+    RESULT=$(eval cacheme "$FIND_EXPRESSION")
+    if [ -z "$RESULT" ]
+        then
+        echo "No results were found."
+    else
+        printf "Permissions\\tNumber\\tUser\\tGroup\\tName\\n"
+        echo "--------------------------------------------"
+        echo "$RESULT"
+    fi
 }
 
-search_for_dirs_or_files_without_multithreading "$@"
+search_for_dirs_or_files "$@"
