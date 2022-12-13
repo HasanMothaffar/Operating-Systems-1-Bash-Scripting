@@ -43,13 +43,11 @@ function main() {
 
 function register_monitoring_cronjob() {
     # https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
-    BASENAME=$( basename -- "$0" )
-    WORKING_DIRECTORY=$( pwd )
-    FULL_PATH="${WORKING_DIRECTORY}/${BASENAME}"
+    SCRIPT_PATH=$(__get_script_fullpath)
 
-    Q3_CRONJOB="0 0 * * * $FULL_PATH"
+    Q3_CRONJOB="0 0 * * * $SCRIPT_PATH"
     __register_cronjob "$Q3_CRONJOB"
 }
 
-# register_monitoring_cronjob "$@"
-main
+register_monitoring_cronjob
+# main
