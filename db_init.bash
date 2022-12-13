@@ -1,5 +1,5 @@
 function write_project_version_to_database() {
-    echo "VERSION 1 (OS 1)" > "$1"
+    echo "version 1 os 1" > "$1"
 }
 
 function create_database() {

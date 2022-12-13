@@ -31,7 +31,7 @@ function insert_key_value_record_to_file() {
 
         read -r -p "Enter value: " VALUE
         ENCODED_VALUE=$(encode_key "$VALUE")
-        echo "$KEY: $ENCODED_VALUE" >> "$GLOBAL_DATABASE_FILENAME"
+        echo "$KEY : $ENCODED_VALUE" >> "$GLOBAL_DATABASE_FILENAME"
         echo "Added key $KEY succesfully!"
     else
         echo "Key $KEY already exists in the database"
@@ -91,25 +91,16 @@ function main_loop() {
         clear
         
         case $OPTION in
-            1)
-            insert_key_value_record_to_file
-            ;;
-            2)
-            delete_record_by_key
-            ;;
-            3)
-            search_for_record_by_key
-            ;;
-            4)
-            update_record
-            ;;
+            1) insert_key_value_record_to_file;;
+            2) delete_record_by_key;;
+            3) search_for_record_by_key;;
+            4) update_record;;
             5)
             echo "Exit"
             exit 0
             ;;
             *)
-            echo "🤔 Unknown key."
-            ;;
+            echo "🤔 Unknown key.";;
         esac
     done
 }
