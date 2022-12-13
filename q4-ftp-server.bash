@@ -21,11 +21,11 @@ function set_up_ftp_server() {
     sudo apt install vsftpd
 
     # Start up the service and enable auto-startup
-    sudo systemctl start vsftpd
-    sudo systemctl enable vsftpd
+    # sudo systemctl start vsftpd
+    # sudo systemctl enable vsftpd
 
     # Or use this if you're on WSl, because systemctl is not supported
-    # sudo service vsftpd start
+    sudo service vsftpd start
 
     # Configure firewall
     sudo ufw allow 20/tcp
@@ -64,10 +64,11 @@ function download_file() {
     read -r -p "Enter your FTP username: " USERNAME
     read -s -r -p "Enter your FTP password: " PASSWORD
     echo
-    read -r -p "Enter the remote filename you want to download: " REMOTE_FILENAME
-    read -r -p "Enter the local filepath you want to download to: " LOCAL_FILEPATH
+    read -r -p "Enter the download type (f for file, F for folder): " DOWNLOAD_TYPE
+    read -r -p "Enter the remote path you want to download: " REMOTE_PATH
+    read -r -p "Enter the local path you want to download to: " LOCAL_PATH
 
-    lftp -e "mirror -O $LOCAL_FILEPATH -f $REMOTE_FILENAME" -u "$USERNAME","$PASSWORD" localhost
+    lftp -c "open -u $USERNAME,$PASSWORD localhost; mirror -O $LOCAL_PATH -$DOWNLOAD_TYPE $REMOTE_PATH"
 }
 
 # FTP Man: https://lftp.yar.ru/lftp-man.html
@@ -76,31 +77,24 @@ function upload_file() {
     read -s -r -p "Enter your FTP password: " PASSWORD
     echo
 
-    read -r -p "Enter the local filename you want to upload: " LOCAL_FILENAME
-    read -r -p "Enter the target directory: " TARGET_DIRECTORY
+    read -r -p "Enter the local filename you want to upload: " LOCAL_PATH
+    read -r -p "Enter the remote path: " REMOTE_PATH
 
     FILE_OR_DIRECTORY_FLAG=""
 
-
-    if [ -d "$LOCAL_FILENAME" ]; then FILE_OR_DIRECTORY_FLAG="F"
-    elif [ -f "$LOCAL_FILENAME" ]; then FILE_OR_DIRECTORY_FLAG="f"
+    if [ -d "$LOCAL_PATH" ]; then FILE_OR_DIRECTORY_FLAG="F"
+    elif [ -f "$LOCAL_PATH" ]; then FILE_OR_DIRECTORY_FLAG="f"
     fi
 
     # Reference: https://serverfault.com/questions/220988/how-to-upload-a-directory-recursively-to-an-ftp-server-by-just-using-ftp-or-lftp
-    lftp -e "mirror -R -$FILE_OR_DIRECTORY_FLAG $LOCAL_FILENAME --target-directory=$TARGET_DIRECTORY" -u "$USERNAME","$PASSWORD" localhost
+    lftp -c "open -u $USERNAME,$PASSWORD localhost; mirror -R -$FILE_OR_DIRECTORY_FLAG $LOCAL_PATH -O $REMOTE_PATH"
 }
 
 function main() {
      case $1 in
-        --download)
-        download_file
-        ;;
-        --upload)
-        upload_file
-        ;;
-        --init)
-        set_up_ftp_server
-        ;;
+        --download) download_file;;
+        --upload) upload_file;;
+        --init) set_up_ftp_server;;
         *)
         echo "🤔 Unknown key."
         echo "Valid options are $VALID_OPTIONS"
