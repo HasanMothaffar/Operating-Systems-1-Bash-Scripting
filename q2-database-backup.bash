@@ -2,44 +2,38 @@
 
 #executing this will automatically activate SCRIPT_PROMPT cli and then it's pretty straight forward just as the homework says
 
-GLOBAL_DATABASE_FILENAME="first.os1db" #temporary
 MODE=0                                 #--backup will set to 1 --restore will set 2
 OUTPUTDIR=""                           #--outputdir to set auto backup output path
 MAX=0                                  #--max to set max files to auto backup
-SCRIPT_PROMPT="
-Q2 backup / restore ($GLOBAL_DATABASE_FILENAME):
-1) Backup the database
-2) Restore a database
-3) Enable automatic backups
 
-Please enter a number from the list above, or (q) to quit:"
 
 function backup_database() {
     if [[ MAX -gt 0 ]]; then
         temp=$(cat /home/os1/backup.log)
         temp2=${temp#*-}
-        sudo zip "$OUTPUTDIR/$(($temp2 % $MAX))" $GLOBAL_DATABASE_FILENAME
+        sudo zip "$OUTPUTDIR/$(($temp2 % $MAX))" "$GLOBAL_DATABASE_FILENAME"
         echo "$MAX-"$(($temp2 + 1))"" | tee /home/os1/backup.log
     else
         read -p "Enter the backup name (with file extension .zip or .tar.gz): " KEY
         if [[ "$KEY" =~ .*\.zip ]]; then
             echo "Using zip for backup (file has .zip extension)..."
-            ip /home/os1/${KEY%".zip"} $GLOBAL_DATABASE_FILENAME
+            ip /home/os1/"${KEY%".zip"}" "$GLOBAL_DATABASE_FILENAME"
             echo "Backup done (/home/os1/$KEY)"
         elif [[ "$KEY" =~ .*\.tar.gz ]]; then
             echo "Using gz for backup (file has .gz extension)..."
-            tar -czf "/home/os1/$KEY" $GLOBAL_DATABASE_FILENAME
+            tar -czf "/home/os1/$KEY" "$GLOBAL_DATABASE_FILENAME"
             echo "Backup done (/home/os1/$KEY)"
         fi
     fi
 }
 
 function restore_database() {
-    read -p "Enter the absolute path of the backup file: " KEY
-    if [[ "$KEY" =~ .*\.zip ]]; then
-        unzip $KEY
-    elif [[ "$KEY" =~ .*\.tar\.gz ]]; then
-        tar -zxf $KEY
+    read -r -p "Enter the absolute path of the backup file: " PATH
+
+    if [[ "$PATH" =~ .*\.zip ]]; then
+        unzip "$PATH"
+    elif [[ "$PATH" =~ .*\.tar\.gz ]]; then
+        tar -zxf "$PATH"
     fi
 }
 
@@ -64,7 +58,7 @@ function enable_automatic_backups() {
 
 while [ $# -gt 0 ]; do
     case "$1" in
-    *os1db)
+    *db)
         GLOBAL_DATABASE_FILENAME=$1
         shift
         ;;
@@ -86,19 +80,19 @@ while [ $# -gt 0 ]; do
         ;;
     esac
 done
+
 if [[ MAX -eq 0 ]]; then
     while true; do
-        echo $SCRIPT_PROMPT
-        read PREF
+        read -r -p "$SCRIPT_PROMPT" PREF
         case $PREF in
         1) backup_database ;;
         2) restore_database ;;
         3) enable_automatic_backups ;;
-        q)
+        4)
             echo "Exiting program."
             exit 0
             ;;
-        *) echo "Uknown key." ;;
+        *) echo "Unknown key." ;;
         esac
     done
 else
