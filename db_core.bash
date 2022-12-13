@@ -3,8 +3,8 @@ function encode_key() {
     echo "$key" | base64
 }
 
-function write_project_version_to_database() {
-    echo "version 1 os 1" > "$1"
+function write_info_to_db_file() {
+    echo "version 1 $USER" > "$1"
 }
 
 function create_database() {
@@ -12,7 +12,7 @@ function create_database() {
         then echo "⚠️  Database $1 already exists. The program will use this file"
     else 
         touch "$1"
-        write_project_version_to_database "$1"
+        write_info_to_db_file "$1"
         echo "✅ Database file $1 created successfully"
     fi
 }
