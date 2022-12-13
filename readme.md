@@ -23,10 +23,13 @@ Values are saved in the DB in `base64` format.
 
 This question is built on top of the previous one.
 
-3. Monitoring performance
-
+3. Monitoring a system's performance performance
 4. Setting up a simple FTP server for downloading/uploading
-5. ???
+5. A wrapper around `find` with a caching layer
+
+## Requirements
+
+-   4th question requires the `cacheme` script (found in the root of the project) to be included in your $PATH, and `lftp` (sudo apt install lftp`)
 
 ## Code
 
@@ -37,5 +40,6 @@ Please try to follow this guideline to ensure consistency across the codebase:
 -   `snake_case` for function names
 -   `UPPERCASE` for variables
 -   append functions with the `function` keyword
+-   Utility functions in `utils.bash` should all be prefixed with `__` to avoid namespace collisions
 
 ## Collaborators
