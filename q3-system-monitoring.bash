@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source utils.bash
+
 MONITORING_RESULTS_FILE="/opt/monitoring.txt"
 
 function write_current_date_monitoring_file() {
@@ -8,6 +10,7 @@ function write_current_date_monitoring_file() {
 }
 
 function main() {
+    echo "Starting monitoring job..."
     write_current_date_monitoring_file
 
     ONE_HOUR_IN_SECONDS=3600
@@ -38,23 +41,15 @@ function main() {
     done
 }
 
-function register_cronjob() {
+function register_monitoring_cronjob() {
     # https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
     BASENAME=$( basename -- "$0" )
     WORKING_DIRECTORY=$( pwd )
     FULL_PATH="${WORKING_DIRECTORY}/${BASENAME}"
 
-    crontab -l > CURRENT_CRONJOBS_FILE
-
     Q3_CRONJOB="0 0 * * * $FULL_PATH"
-    echo "$Q3_CRONJOB" >> CURRENT_CRONJOBS_FILE
-
-    crontab CURRENT_CRONJOBS_FILE
-
-    # rm because the current cron jobs get written to a local file in the invoking directory
-    rm CURRENT_CRONJOBS_FILE
-
+    __register_cronjob "$Q3_CRONJOB"
 }
 
-# register_cronjob "$@"
+# register_monitoring_cronjob "$@"
 main
