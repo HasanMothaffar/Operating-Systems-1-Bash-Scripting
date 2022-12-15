@@ -3,14 +3,9 @@
 source utils.bash
 
 USAGE="
-./q2-database-backup.bash [--backup] | [--max MAX_NUMBER_OF_BACKUPS]
+./q2-database-backup.bash dbname [--backup] | [--max MAX_NUMBER_OF_BACKUPS]
 "
 
-if [ $# = 0 ] 
-    then
-    echo "$USAGE"
-    exit
-fi
 
 # ARGS
 AUTOMATIC_BACKUP=false
@@ -103,6 +98,11 @@ function parse_commandline_arguments() {
             ;;
         esac
     done
+
+    if [ -z "$DATABASE_FILENAME" ] 
+        then echo "Database name is required."
+        exit
+    fi
 }
 
 function main() {
