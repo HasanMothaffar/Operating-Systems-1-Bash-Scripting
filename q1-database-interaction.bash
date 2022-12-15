@@ -16,14 +16,12 @@ if [ $# = 0 ]
     exit
 fi
 
-
 function main_loop() {
     OPTION=""
 
     while [ "$OPTION" != "5" ]
     do
         read -r -p "$QUESTION_PROMPT" OPTION
-        clear
         
         case $OPTION in
             1) insert_key_value_record_to_file;;
