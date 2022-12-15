@@ -23,6 +23,8 @@ function search_for_dirs_or_files() {
     # https://stackoverflow.com/questions/68881897/bash-get-last-index-of-array
     LAST_INDEX=$((${#ALL_ARGS_EXCEPT_FOR_FIRST_ONE[@]} - 1))
 
+    # Why use parentheses? https://superuser.com/questions/387182/find-command-giving-different-outputs-with-without-print
+    FIND_EXPRESSION+="\( "
     for i in "${!ALL_ARGS_EXCEPT_FOR_FIRST_ONE[@]}"; do
         FIND_EXPRESSION+="-name '${ALL_ARGS_EXCEPT_FOR_FIRST_ONE[$i]}'"
         if [ "$i" -ne "$LAST_INDEX" ] 
@@ -30,8 +32,10 @@ function search_for_dirs_or_files() {
             FIND_EXPRESSION+=" -o "
         fi
     done
+    FIND_EXPRESSION+=" \)"
 
-    # https://unix.stackexchange.com/questions/353460/list-permissions-with-find-command
+
+    # What is this weird -printf? https://unix.stackexchange.com/questions/353460/list-permissions-with-find-command
     SPACE="\\\t"
     SPECIAL_PRINT_FORMAT=" -printf %M$SPACE%m$SPACE%u$SPACE%g$SPACE%p\\\n"
     REDIRECT_ERROR_TO_NULL=" 2>/dev/null"
