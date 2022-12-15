@@ -24,7 +24,7 @@ function search_for_dirs_or_files() {
     LAST_INDEX=$((${#ALL_ARGS_EXCEPT_FOR_FIRST_ONE[@]} - 1))
 
     for i in "${!ALL_ARGS_EXCEPT_FOR_FIRST_ONE[@]}"; do
-        FIND_EXPRESSION+="-name ${ALL_ARGS_EXCEPT_FOR_FIRST_ONE[$i]}"
+        FIND_EXPRESSION+="-name '${ALL_ARGS_EXCEPT_FOR_FIRST_ONE[$i]}'"
         if [ "$i" -ne "$LAST_INDEX" ] 
             then
             FIND_EXPRESSION+=" -o "
@@ -40,6 +40,7 @@ function search_for_dirs_or_files() {
     FIND_EXPRESSION+="$REDIRECT_ERROR_TO_NULL"
 
     echo "Searching from: $DIRECTORY_TO_START_SEARCHING_FORM"
+    echo ""
     RESULT=$(eval cacheme "$FIND_EXPRESSION")
     if [ -z "$RESULT" ]
         then
