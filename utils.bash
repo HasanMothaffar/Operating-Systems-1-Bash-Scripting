@@ -1,3 +1,4 @@
+# Reference: https://stackoverflow.com/questions/878600/how-to-create-a-cron-job-using-bash-automatically-without-the-interactive-editor
 function __register_cronjob() {
     CRONJOB="$1"
 
