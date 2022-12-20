@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Usage: cacheme command
+# E.g. cacheme find -name "opt"
+# For cleaning all records, use: cacheme --clean
+# Reference: https://stackoverflow.com/questions/11900239/can-i-cache-the-output-of-a-command-on-linux-from-cli
+
+if [ "$1" = "--clean" ]
+    then
+        echo "Cleaning all cache records..."
+        rm -rf /tmp/command_cache*
+        echo "Cache cleaned successfully!"
+        exit
+fi
+
+KEY="$*"
+
+function append_file_last_modified_date_to_key() {
+    for arg in "$@"
+    do
+        if [ -f "$arg" ]
+        then
+            KEY+=$(date -r "$arg" +\ %s)
+        fi
+    done
+}
+
+append_file_last_modified_date_to_key "$@"
+
+# Use the hash as a name for temporary file
+FILE="/tmp/command_cache.$(echo -n "$KEY" | md5sum | cut -c -10)"
+
+# Use cached file or execute the command and cache it
+if [ -f "$FILE" ]
+then
+  cat "$FILE"
+else
+  "$@" | tee "$FILE"
+fi
