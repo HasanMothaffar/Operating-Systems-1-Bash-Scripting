@@ -24,6 +24,7 @@ function initialize_database() {
     if [ "$1" = "--create" ] 
     then 
         create_database "$2"
+        
         GLOBAL_DATABASE_FILENAME="$2"
 
     # Usage: ./my_script.sh  existing-db-name
@@ -43,7 +44,7 @@ function insert_key_value_record_to_file() {
     read -r -p "Enter key: " KEY
   
     # Only add new record if key doesn't exist before
-    SEARCH_RESULT=$(grep -w  "$KEY :" "$GLOBAL_DATABASE_FILENAME")
+    SEARCH_RESULT=$(grep -w "$KEY :" "$GLOBAL_DATABASE_FILENAME")
     if [ -z "$SEARCH_RESULT" ] 
         then 
 
@@ -74,7 +75,7 @@ function search_for_record_by_key() {
     read -r -p "Enter the key that you want to search for: " KEY
 
     # Search for words matching KEY, ignore casing
-    SEARCH_RESULT=$(grep -i -w  "$KEY :" "$GLOBAL_DATABASE_FILENAME")
+    SEARCH_RESULT=$(grep -i "$KEY :" "$GLOBAL_DATABASE_FILENAME")
     if [ -z "$SEARCH_RESULT" ] 
         then 
         echo "No result was found for $KEY"
