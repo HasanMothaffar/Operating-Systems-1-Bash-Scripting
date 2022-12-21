@@ -47,7 +47,7 @@ function search_for_dirs_or_files() {
 
     echo "Searching from: $DIRECTORY_TO_START_SEARCHING_FORM"
     echo ""
-    RESULT=$(eval cacheme "$FIND_EXPRESSION")
+    RESULT=$(eval ./cacheme "$FIND_EXPRESSION")
     if [ -z "$RESULT" ]
         then
         echo "No results were found."
