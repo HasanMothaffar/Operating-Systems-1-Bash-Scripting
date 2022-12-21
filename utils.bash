@@ -1,15 +1,22 @@
 # Reference: https://stackoverflow.com/questions/878600/how-to-create-a-cron-job-using-bash-automatically-without-the-interactive-editor
 function __register_cronjob() {
     CRONJOB="$1"
-
     crontab -l > current_cronjobs.txt
-    echo "$CRONJOB" >> current_cronjobs.txt
 
-    crontab current_cronjobs.txt
-    echo "Added cronjob: $CRONJOB successfully!"
+    if grep -F "$CRONJOB" current_cronjobs.txt
+        then
+        echo "Cronjob is already registered."
+        rm current_cronjobs.txt
 
-    # rm because the current cron jobs get written to a local file in the invoking directory
-    rm current_cronjobs.txt
+    else
+        echo "$CRONJOB" >> current_cronjobs.txt
+
+        crontab current_cronjobs.txt
+        echo "Added cronjob: $CRONJOB successfully!"
+
+        # rm because the current cron jobs get written to a local file in the invoking directory
+        rm current_cronjobs.txt
+    fi
 }
 
 # Sorry for duplication, but I'm afraid I might break the project :(
