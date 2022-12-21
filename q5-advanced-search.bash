@@ -1,3 +1,5 @@
+#!/bin/bash
+
 USAGE="
 Usage: ./my_script <place-to-search-from> [arg1 arg2 arg3 ...]
 

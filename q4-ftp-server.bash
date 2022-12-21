@@ -1,3 +1,5 @@
+#!/bin/bash
+
 VALID_OPTIONS="--download | --upload | --init"
 
 USAGE="
