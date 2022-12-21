@@ -42,7 +42,14 @@ function initialize_database() {
 
 function insert_key_value_record_to_file() {
     read -r -p "Enter key: " KEY
-  
+    
+    if [[ "$KEY" = *:* ]]
+        then 
+        echo "Key contains the colon (:) character, which is disallowed. Please enter another key"
+        return 1
+    fi
+    
+
     # Only add new record if key doesn't exist before
     SEARCH_RESULT=$(grep -w "$KEY :" "$GLOBAL_DATABASE_FILENAME")
     if [ -z "$SEARCH_RESULT" ] 
