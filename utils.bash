@@ -12,6 +12,16 @@ function __register_cronjob() {
     rm current_cronjobs.txt
 }
 
+# Sorry for duplication, but I'm afraid I might break the project :(
+# Tomorrow's the deadline!
+function __get_file_fullpath() {
+    BASENAME=$( basename -- "$1" )
+    WORKING_DIRECTORY=$( pwd )
+    FULL_PATH="${WORKING_DIRECTORY}/${BASENAME}"
+
+    echo "$FULL_PATH"
+}
+
 function __get_script_fullpath() {
     BASENAME=$( basename -- "$0" )
     WORKING_DIRECTORY=$( pwd )

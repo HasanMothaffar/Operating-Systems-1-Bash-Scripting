@@ -69,8 +69,7 @@ function enable_automatic_backups() {
 
     SCRIPT_PATH=$(__get_script_fullpath)
 
-    # Sorry for hardcoding :(
-    HARDCODED_DB_PATH="/mnt/d/my-projects/operating-systems-y4t1/$DATABASE_FILENAME"
+    HARDCODED_DB_PATH=$(__get_file_fullpath "$DATABASE_FILENAME")
     CRONJOB="$CRONJOB_SCHEDULE $SCRIPT_PATH $HARDCODED_DB_PATH --backup /opt/backups --max $MAX_NUMBER_OF_BACKUPS"
     
     __register_cronjob "$CRONJOB"
