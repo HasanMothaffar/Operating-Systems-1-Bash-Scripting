@@ -18,7 +18,7 @@ We have to interact with a simple text file database (key-value pair) using oper
 Values are saved in the DB in `base64` format.
 
 2. Backing up / Restoring / Enabling automatic backups for the database in question 1
-3. Monitoring a system's performance performance
+3. Monitoring a system's performance
 4. Setting up a simple FTP server for downloading/uploading
 5. A wrapper around `find` with a caching layer
 
