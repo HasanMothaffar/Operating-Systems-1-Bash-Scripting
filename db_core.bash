@@ -87,7 +87,14 @@ function search_for_record_by_key() {
         then 
         echo "No result was found for $KEY"
     else
-        echo "$SEARCH_RESULT"
+        # Get everything before :*
+        KEY=${SEARCH_RESULT% :*}
+
+        # Get everything after *:
+        ENCODED_VALUE=${SEARCH_RESULT#*: }
+
+        DECODED_VALUE=$(echo "$ENCODED_VALUE" | base64 -d)
+        echo "$KEY : $DECODED_VALUE"
     fi
 }
 
