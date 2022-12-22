@@ -40,5 +40,5 @@ Please try to follow this guideline to ensure consistency across the codebase:
 
 ## Collaborators
 
--   Hasan Mothaffar
--   Redwan Alloush
+-   [Hasan Mothaffar](https://github.com/HasanMothaffar)
+-   [Redwan Alloush](https://github.com/RedWn)
